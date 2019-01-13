@@ -1,15 +1,3 @@
-const ryan_chacon = 'ryanandrewchacon'
-const ryan_chacon_birthday = '12/29/1995'
-const ryan_soul_path = 2
-
-const shane_luna = 'shanetenayaluna'
-const shane_luna_birthday = "05/29/1995"
-const luna_soul_path = 4
-
-const emily_loisel = 'emilyamandaloisel'
-const emily_loisel_birthday = '7/6/1996'
-const emily_soul_path = 2
-
 //tarological alphabet cycle table
 const TACT = {
 	a: 1,
@@ -48,12 +36,13 @@ class Taroscope {
 		this.birthday = birthday
 	}
 
-	generateMap(name = this.name, soul_path = this.getSoulPath(this.birthday)) {
+	//generate birth taroscope
+	generateBTS(name = this.name, soul_path = this.getSoulPath(this.birthday)) {
 		if (!name || !soul_path) {
 			return new Error('Must provide name and soul path')
 		}
 	
-		const taro_name = this.extendName(this._formatName(name))
+		const taro_name = Taroscope.extendName(Taroscope._formatName(name))
 		
 		let taroscope = []
 		let counter = 0
@@ -74,7 +63,7 @@ class Taroscope {
 
 					const number = TACT[letter]
 
-					function map_search(number) {
+					const map_search = (number) => {
 						let tmp_number = number
 						tmp_number += counter
 						if (tmp_number > 22) {
@@ -97,7 +86,7 @@ class Taroscope {
 		return taroscope
 	}
 
-	extendName(name) {
+	static extendName(name) {
 		if (typeof name !== 'string') {
 			return new Error('Name must be of type string')
 		}
@@ -115,15 +104,15 @@ class Taroscope {
 	}
 
 	getSoulPath(birthday = this.birthday) {
-		return this.reduceNumber(this._formatBirthday(birthday))
+		return Taroscope.reduceNumber(Taroscope._formatBirthday(birthday))
 	}
 
 	getNamePath(fullName = this.name) {
-		let name = this._formatName(fullName)
-		return this.reduceString(name)
+		let name = Taroscope._formatName(fullName)
+		return Taroscope.reduceString(name)
 	}
 
-	reduceNumber(arg) {
+	static reduceNumber(arg) {
 		if (typeof arg !== 'number') {
 			return new Error('Arg must be of type number')
 		}
@@ -138,7 +127,7 @@ class Taroscope {
 		return arg
 	}
 
-	reduceString(arg) {
+	static reduceString(arg) {
 		if (typeof arg !== 'string') {
 			return new Error('Arg must be of type string')
 		}
@@ -150,10 +139,10 @@ class Taroscope {
 				}
 			}
 		}
-		return this.reduceNumber(counter)
+		return Taroscope.reduceNumber(counter)
 	}
 
-	_formatName(name) {
+	static _formatName(name) {
 		if (typeof name !== 'string') {
 			return new Error('Name must be of type string')
 		}
@@ -173,7 +162,7 @@ class Taroscope {
 		return name
 	}
 
-	_formatBirthday(birthday) {
+	static _formatBirthday(birthday) {
 		if (typeof birthday === 'string') {
 			if (birthday.includes("/")) {
 				let bday_split = birthday.split("/")
@@ -181,41 +170,39 @@ class Taroscope {
 					return new Error('Birthday must be of format: mm/dd/yyyy')
 				}
 				birthday = bday_split.join("")
-				return this.reduceNumber(parseInt(birthday))
+				return Taroscope.reduceNumber(parseInt(birthday))
 			} else {
-				return this.reduceNumber(parseInt(birthday))
+				return Taroscope.reduceNumber(parseInt(birthday))
 			}
 		} else if (typeof birthday === 'number') {
 			if (birthday.toString().length < 6 || birthday.toString().length > 8) {
 				return new Error('Birthday must be of format: mmddyyyy or mdyyyy')
 			} else {
-				return this.reduceNumber(birthday)
+				return Taroscope.reduceNumber(birthday)
 			}
 		} else {
 			return new Error('Birthday must be of type (String: mdyyyy || mmddyyy || mm/dd/yyyy) or of type (Number: mmddyyyy || mdyyyy)')
 		}
 	}
+
+	setName(name) {
+		this.name = name
+	}
+
+	setBirthday(birthday) {
+		this.birthday = birthday
+	}
+
+	getName() {
+		return this.name
+	}
+
+	getBirthday() {
+		return this.birthday
+	}
 }
 
-let ryan = new Taroscope('ryan andrew chacon', '12/29/1995')
-let ryan_map = ryan.generateMap()
-console.log(ryan_map)
-console.log("Ryan's soul path: ", ryan.getSoulPath())
-console.log("Ryan's name path: ", ryan.getNamePath())
-
-let erik = new Taroscope('erik andres chacon', '5/31/1997')
-let erik_map = erik.generateMap()
-console.log(erik_map)
-console.log("Erik's soul path: ", erik.getSoulPath())
-console.log("Erik's name path: ", erik.getNamePath())
-
-let shane = new Taroscope("shanetenayaluna", shane_luna_birthday)
-let shane_map = shane.generateMap()
-console.log(shane_map)
-console.log("Shane's soul path: ", shane.getSoulPath())
-console.log("Shane's name path: ", shane.getNamePath())
-
-module.exports = Taroscope
+export default Taroscope
 
 
 
